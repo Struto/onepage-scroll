@@ -90,7 +90,9 @@
         leftPos = 0,
         lastAnimation = 0,
         quietPeriod = 500,
-        paginationList = "";
+        paginationList = "",
+        swipeMoveUpEvent = settings.direction === 'vertical' ? 'swipeDown' : 'swipeRight';
+        swipeMoveDownEvent = settings.direction === 'vertical' ? 'swipeUp' : 'swipeLeft';
 
     $.fn.transformPage = function(settings, pos, index) {
       if (typeof settings.beforeMove == 'function') settings.beforeMove(index);
@@ -215,7 +217,7 @@
     function responsive() {
       //start modification
       var valForTest = false;
-      var typeOfRF = typeof settings.responsiveFallback
+      var typeOfRF = typeof settings.responsiveFallback;
 
       if(typeOfRF == "number"){
       	valForTest = $(window).width() < settings.responsiveFallback;
@@ -236,18 +238,17 @@
       if (valForTest) {
         $("body").addClass("disabled-onepage-scroll");
         $(document).unbind('mousewheel DOMMouseScroll MozMousePixelScroll');
-        el.swipeEvents().unbind("swipeDown swipeUp");
+        el.swipeEvents().unbind("swipeDown swipeUp swipeLeft swipeRight");
       } else {
         if($("body").hasClass("disabled-onepage-scroll")) {
           $("body").removeClass("disabled-onepage-scroll");
           $("html, body, .wrapper").animate({ scrollTop: 0 }, "fast");
         }
 
-
-        el.swipeEvents().bind("swipeDown",  function(event){
+        el.swipeEvents().bind(swipeMoveUpEvent,  function(event){
           if (!$("body").hasClass("disabled-onepage-scroll")) event.preventDefault();
           el.moveUp();
-        }).bind("swipeUp", function(event){
+        }).bind(swipeMoveDownEvent, function(event){
           if (!$("body").hasClass("disabled-onepage-scroll")) event.preventDefault();
           el.moveDown();
         });
@@ -309,10 +310,10 @@
       }
     });
 
-    el.swipeEvents().bind("swipeDown",  function(event){
+    el.swipeEvents().bind(swipeMoveUpEvent,  function(event){
       if (!$("body").hasClass("disabled-onepage-scroll")) event.preventDefault();
       el.moveUp();
-    }).bind("swipeUp", function(event){
+    }).bind(swipeMoveDownEvent, function(event){
       if (!$("body").hasClass("disabled-onepage-scroll")) event.preventDefault();
       el.moveDown();
     });

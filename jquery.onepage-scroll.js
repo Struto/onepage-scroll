@@ -48,7 +48,7 @@
           if (touches && touches.length) {
             startX = touches[0].pageX;
             startY = touches[0].pageY;
-            $this.bind('touchmove', touchmove);
+            $this.off('touchove', touchmove).on('touchmove', touchmove);
           }
         }
 
@@ -71,7 +71,7 @@
               $this.trigger("swipeDown");
             }
             if (Math.abs(deltaX) >= 50 || Math.abs(deltaY) >= 50) {
-              $this.unbind('touchmove', touchmove);
+              $this.off('touchmove', touchmove);
             }
           }
         }
@@ -245,10 +245,10 @@
           $("html, body, .wrapper").animate({ scrollTop: 0 }, "fast");
         }
 
-        el.swipeEvents().bind(swipeMoveUpEvent,  function(event){
+        el.swipeEvents().off(swipeMoveUpEvent).on(swipeMoveUpEvent,  function(event){
           if (!$("body").hasClass("disabled-onepage-scroll")) event.preventDefault();
           el.moveUp();
-        }).bind(swipeMoveDownEvent, function(event){
+        }).off(swipeMoveDownEvent).on(swipeMoveDownEvent, function(event){
           if (!$("body").hasClass("disabled-onepage-scroll")) event.preventDefault();
           el.moveDown();
         });
